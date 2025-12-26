@@ -1,5 +1,4 @@
-using GameState;
-using GameState.States;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -11,7 +10,7 @@ namespace UI.Panels
         [Header("Buttons")]
         [SerializeField] private Button startButton;
 
-        [Inject] private GameStateMachine _gameStateMachine;
+        [Inject] private GameManager _gameManager;
         
         private void OnEnable()
         {
@@ -25,7 +24,7 @@ namespace UI.Panels
         
         private void StartButtonPerformed()
         {
-            _gameStateMachine.ChangeState<LevelTransitionState>();
+            _gameManager.OnGameStart();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Managers;
 using UI;
-using UI.Panels;
 using VContainer;
 
 namespace GameState.States

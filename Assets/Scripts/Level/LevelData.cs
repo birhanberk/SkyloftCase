@@ -2,9 +2,11 @@ using UnityEngine;
 
 namespace Level
 {
-    [CreateAssetMenu(menuName = "Game/Level Data")]
+    [CreateAssetMenu(menuName = "Data / Level")]
     public class LevelData : ScriptableObject
     {
-        public GameObject levelPrefab;
+        [SerializeField] private GameObject levelPrefab;
+
+        public GameObject LevelPrefab => levelPrefab;
     }
 }

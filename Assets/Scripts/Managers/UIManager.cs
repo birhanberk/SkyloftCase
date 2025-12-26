@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UI;
+using UI.Joystick;
 using UI.Panels;
 using UnityEngine;
 
@@ -10,9 +11,12 @@ namespace Managers
     {
         [SerializeField] private List<UIPanelEntry> panels;
         [SerializeField] private FadePanel fadePanel;
+        [SerializeField] private UIJoystick joystick;
 
         private readonly Dictionary<UIPanelType, BasePanel> _panelMap = new();
         private BasePanel _currentPanel;
+
+        public UIJoystick Joystick => joystick;
 
         private void Awake()
         {

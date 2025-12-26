@@ -32,7 +32,7 @@ namespace Managers
             if (_currentLevelInstance)
                 Destroy(_currentLevelInstance);
 
-            _currentLevelInstance = Instantiate(levels[index].levelPrefab, levelRoot);
+            _currentLevelInstance = Instantiate(levels[index].LevelPrefab, levelRoot);
         }
     }
 }

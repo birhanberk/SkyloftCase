@@ -9,6 +9,7 @@ namespace Scope
 {
     public class GameLifetimeScope : LifetimeScope
     {
+        [SerializeField] private GameManager gameManager;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private LevelManager levelManager;
         
@@ -16,7 +17,7 @@ namespace Scope
         {
             // Core systems
             builder.Register<GameStateMachine>(Lifetime.Singleton);
-            builder.Register<GameManager>(Lifetime.Singleton);
+            builder.RegisterComponent(gameManager);
             builder.RegisterComponent(uiManager);
             builder.RegisterComponent(levelManager);
             
