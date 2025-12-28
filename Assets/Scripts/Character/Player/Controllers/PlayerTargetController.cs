@@ -14,6 +14,12 @@ namespace Character.Player.Controllers
         private readonly HashSet<ITargetable> _targets = new();
 
         public bool HasTarget => _targets.Count > 0;
+
+        public void OnLevelStart()
+        {
+            ClearTargets();
+            SetDetection(true);
+        }
         
         public void SetDetection(bool enable)
         {
@@ -22,7 +28,6 @@ namespace Character.Player.Controllers
         
         public void ClearTargets()
         {
-            SetDetection(false);
             _targets.Clear();
         }
 
@@ -52,11 +57,14 @@ namespace Character.Player.Controllers
         {
             var minSqrDistance = float.MaxValue;
             ITargetable closest = null;
-
+            var deadTargets = new List<ITargetable>();
             foreach (var target in _targets)
             {
                 if (!target.IsAlive)
+                {
+                    deadTargets.Add(target);
                     continue;
+                }
 
                 var sqrDist = (target.TargetTransform.position - transform.position).sqrMagnitude;
 
@@ -67,6 +75,10 @@ namespace Character.Player.Controllers
                 }
             }
 
+            foreach (var target in deadTargets)
+            {
+                _targets.Remove(target);
+            }
             return closest;
         }
 

@@ -43,19 +43,6 @@ namespace Managers
                 _currentPanel.Show();
             }
         }
-        
-        public void ShowLevelSuccess(int killCount)
-        {
-            if (_panelMap.TryGetValue(UIPanelType.LevelSuccess, out var panel))
-            {
-                var levelSuccessPanel = panel as LevelSuccessPanel;
-
-                _currentPanel?.Hide();
-                _currentPanel = levelSuccessPanel;
-
-                levelSuccessPanel?.Show(killCount);
-            }
-        }
 
         public void FadeIn(Action onComplete = null)
         {

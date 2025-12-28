@@ -1,18 +1,17 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace Character.Player.Controllers
 {
     public class PlayerAnimationController : MonoBehaviour
     {
         [SerializeField] private Animator animator;
+        [SerializeField] private Transform aimIKTarget;
+        [SerializeField] private Rig rig;
 
         private PlayerCharacter _playerCharacter;
-
-        private Transform _leftHandIKTarget;
-        private float _leftHandIKWeight;
-
-        private Transform _lookTarget;
-        private bool _enableLookAt;
 
         private bool _isActive = true;
 
@@ -24,19 +23,23 @@ namespace Character.Player.Controllers
         private static readonly int MoveYHash  = Animator.StringToHash("Y");
         private static readonly int SpeedHash  = Animator.StringToHash("Speed");
 
+        public Action OnAttackEventTriggered;
+        public Action OnDeadEventTriggered;
+
         public void OnStart(PlayerCharacter playerCharacter)
         {
             _playerCharacter = playerCharacter;
-            SetActive(true);
         }
 
-        private void OnAnimatorIK(int layerIndex)
+        public void OnLevelStart()
         {
-            if (!_isActive)
-                return;
+            SetActive(true);
+            StartCoroutine(UpdateRigWeight(0, 1));
+        }
 
-            HandleLeftHandIK();
-            HandleLookAt();
+        public void SetIKTarget(Transform target)
+        {
+            aimIKTarget. position = target.position;
         }
 
         public void UpdateLocomotion(Vector2 input, float speed)
@@ -67,83 +70,49 @@ namespace Character.Player.Controllers
         public void PlaySearch()
         {
             animator.CrossFade(EmptyHash, 0.1f, 1);
-            DisableLookAt();
-            EnableLeftHandIK(_leftHandIKTarget);
         }
 
         public void PlayAttack()
         {
             animator.CrossFade(AttackHash, 0.1f, 1);
-            DisableLeftHandIK();
-            EnableLookAt(_lookTarget);
         }
 
         public void PlayDeath()
         {
             SetActive(false);
+            StartCoroutine(UpdateRigWeight(1, 0));
+            animator.SetLayerWeight(1, 0);
             animator.CrossFade(DeathHash, 0.1f);
         }
 
-        public void EnableLeftHandIK(Transform target, float weight = 1f)
+        public void OnAttackEvent()
         {
-            _leftHandIKTarget = target;
-            _leftHandIKWeight = Mathf.Clamp01(weight);
+            OnAttackEventTriggered?.Invoke();
         }
 
-        private void DisableLeftHandIK()
+        public void OnDeadEvent()
         {
-            _leftHandIKTarget = null;
-            _leftHandIKWeight = 0f;
-        }
-
-        private void HandleLeftHandIK()
-        {
-            if (!_leftHandIKTarget || _leftHandIKWeight <= 0f)
-            {
-                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
-                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
-                return;
-            }
-
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, _leftHandIKWeight);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, _leftHandIKWeight);
-
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandIKTarget.position);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandIKTarget.rotation);
-        }
-
-        public void EnableLookAt(Transform target)
-        {
-            _lookTarget = target;
-            _enableLookAt = target;
-        }
-
-        private void DisableLookAt()
-        {
-            _enableLookAt = false;
-        }
-
-        private void HandleLookAt()
-        {
-            if (!_enableLookAt || !_lookTarget)
-            {
-                animator.SetLookAtWeight(0f);
-                return;
-            }
-
-            animator.SetLookAtWeight(1f, 0.7f, 0.2f, 0f, 0.5f);
-            animator.SetLookAtPosition(_lookTarget.position);
+            OnDeadEventTriggered?.Invoke();
         }
 
         private void SetActive(bool active)
         {
             _isActive = active;
+        }
+        
+        private IEnumerator UpdateRigWeight(float start, float end)
+        {
+            float elapsedTime = 0;
 
-            if (!active)
+            while (elapsedTime < 0.1f)
             {
-                DisableLeftHandIK();
-                DisableLookAt();
+                rig.weight = Mathf.Lerp(start, end, (elapsedTime / 0.1f));
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
             }
+
+            rig.weight = end;
         }
     }
 }

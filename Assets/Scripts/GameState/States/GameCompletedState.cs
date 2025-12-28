@@ -11,6 +11,7 @@ namespace GameState.States
         public void Enter()
         {
             _uiManager.Show(UIPanelType.GameCompleted);
+            _uiManager.Joystick.OnReset();
         }
 
         public void Exit() { }

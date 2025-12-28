@@ -2,20 +2,26 @@ namespace Character.Player.States.MovementState
 {
     public class PlayerDeadState : BasePlayerState
     {
-        private bool _entered;
-
         public PlayerDeadState(PlayerCharacter player) : base(player) { }
 
         public override void Enter()
         {
-            if (_entered) return;
-            _entered = true;
-
-            Player.MovementController.StopImmediately();
+            Player.MovementController.StopMovement();
 
             Player.TargetController.ClearTargets();
+            Player.TargetController.SetDetection(false);
 
             Player.AnimationController.PlayDeath();
+            
+            Player.StateController.ChangeCombatState(PlayerStateType.Search);
+
+            Player.AnimationController.OnDeadEventTriggered += OnDeadEvent;
+        }
+
+        private void OnDeadEvent()
+        {
+            Player.AnimationController.OnDeadEventTriggered -= OnDeadEvent;
+            Player.HealthController.OnDeadCompleted();
         }
     }
 }

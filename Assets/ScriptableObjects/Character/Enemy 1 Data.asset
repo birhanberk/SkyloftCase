@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: Enemy 1 Data
   m_EditorClassIdentifier: 
   health: 100
-  moveSpeed: 1
+  moveSpeed: 1.5
+  prefab: {fileID: 3625326059182804724, guid: 029189ccd2afd8245bedb9af1da7de8a, type: 3}
+  initialSize: 5
+  attackDamage: 100
+  attackRange: 1.5

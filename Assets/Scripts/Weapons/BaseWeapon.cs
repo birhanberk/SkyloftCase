@@ -1,3 +1,4 @@
+using Character.Enemy;
 using UnityEngine;
 
 namespace Weapons
@@ -18,6 +19,7 @@ namespace Weapons
             gameObject.SetActive(false);
         }
 
-        public abstract void Attack();
+        public abstract void Attack(ITargetable target);
+        public abstract bool CanAttack(ITargetable target);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 using Weapons;
 
 namespace Character.Player.Controllers
@@ -10,11 +11,14 @@ namespace Character.Player.Controllers
     {
         [SerializeField] private Transform weaponHolder;
         [SerializeField] private BaseWeapon startingWeapon;
+        
+        [Inject] private IObjectResolver _objectResolver;
 
         private PlayerCharacter _playerCharacter;
         private readonly Dictionary<WeaponData, BaseWeapon> _ownedWeapons = new();
         private BaseWeapon _currentWeapon;
-        public BaseWeapon CurrentWeapon => _currentWeapon;
+
+        public bool CanAttack => _currentWeapon.CanAttack(_playerCharacter.TargetController.GetClosestTarget());
 
         public void OnStart(PlayerCharacter playerCharacter)
         {
@@ -27,6 +31,7 @@ namespace Character.Player.Controllers
             if (!startingWeapon)
                 return;
 
+            _objectResolver.Inject(startingWeapon);
             AddWeapon(startingWeapon);
             EquipWeapon(startingWeapon.Data);
         }
@@ -52,15 +57,11 @@ namespace Character.Player.Controllers
             _currentWeapon?.OnUnequip();
             _currentWeapon = weapon;
             _currentWeapon.OnEquip();
-            if (_currentWeapon is RangedWeapon rangedWeapon)
-            {
-                _playerCharacter.AnimationController.EnableLeftHandIK(rangedWeapon.LeftHandPoint);
-            }
         }
 
         public void Attack()
         {
-            _currentWeapon?.Attack();
+            _currentWeapon?.Attack(_playerCharacter.TargetController.GetClosestTarget());
         }
     }
 }

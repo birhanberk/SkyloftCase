@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1636ce26ba7b5524a8d96164aff6c33b, type: 3}
+  m_Name: Level 2 Data
+  m_EditorClassIdentifier: 
+  levelTime: 180
+  levelSpawnData:
+  - enemyData: {fileID: 11400000, guid: 672cc8e5f98f8e744a4291537338dbf6, type: 2}
+    spawnRatio: 40
+  - enemyData: {fileID: 11400000, guid: e3e4ff5460fde744e894a9a2d3d25696, type: 2}
+    spawnRatio: 50
+  - enemyData: {fileID: 11400000, guid: 90cf0cccc2b2c7a439fa4543faa6b9d2, type: 2}
+    spawnRatio: 10
+  maxActiveEnemyCount: 20
+  despawnDistance: 0.4

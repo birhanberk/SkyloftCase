@@ -5,6 +5,9 @@ using Character.Common.States;
 using Character.Player.States;
 using Character.Player.States.CombatState;
 using Character.Player.States.MovementState;
+using Managers;
+using UnityEngine;
+using VContainer;
 
 namespace Character.Player.Controllers
 {
@@ -12,6 +15,8 @@ namespace Character.Player.Controllers
     public class PlayerStateController
     {
         private PlayerCharacter _playerCharacter;
+
+        [Inject] private GameManager _gameManager;
         
         private CharacterStateMachine _movementStateMachine;
         private CharacterStateMachine _combatStateMachine;
@@ -25,11 +30,17 @@ namespace Character.Player.Controllers
 
             CreateStateMachines();
             CreateStates();
-
+            
             ChangeMovementState(PlayerStateType.Idle);
             ChangeCombatState(PlayerStateType.Search);
+        }
 
+        public void OnLevelStart()
+        {
+            _playerCharacter.HealthController.OnHealthChanged += OnHealthChanged;
             _playerCharacter.HealthController.OnDeadAction += OnDead;
+            ChangeMovementState(PlayerStateType.Idle);
+            ChangeCombatState(PlayerStateType.Search);
         }
 
         public void OnUpdate()
@@ -74,7 +85,16 @@ namespace Character.Player.Controllers
         private void OnDead(BaseCharacter character)
         {
             _playerCharacter.HealthController.OnDeadAction -= OnDead;
+            _playerCharacter.HealthController.OnHealthChanged -= OnHealthChanged;
             ChangeMovementState(PlayerStateType.Dead);
+        }
+
+        private void OnHealthChanged(float health, float maxHealth)
+        {
+            if (_playerCharacter.HealthController.IsAlive && !Mathf.Approximately(health, maxHealth))
+            {
+                _gameManager.VignetteController.Flash();
+            }
         }
     }
 }

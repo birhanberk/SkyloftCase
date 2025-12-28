@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbcdb95dbd35cf8409e604adfc8a8ba3, type: 3}
   m_Name: Ranged Weapon 1 Data
   m_EditorClassIdentifier: 
-  WeaponId: 
-  AttackRate: 0
-  Damage: 0
-  Range: 0
+  damage: 100
+  range: 3

@@ -13,21 +13,31 @@ namespace Character.Player
         [SerializeField] private PlayerAnimationController playerAnimationController;
         [SerializeField] private PlayerWeaponController playerWeaponController;
         
-        [Inject] private IObjectResolver _objectResolver;
-
         public PlayerMovementController MovementController => playerMovementController;
         public PlayerStateController StateController => playerStateController;
         public PlayerTargetController TargetController => playerTargetController;
         public PlayerAnimationController AnimationController => playerAnimationController;
+        public PlayerWeaponController WeaponController => playerWeaponController;
 
-        protected override void Start()
+        [Inject]
+        private void Construct(IObjectResolver objectResolver)
         {
-            base.Start();
-            _objectResolver.Inject(playerMovementController);
+            objectResolver.Inject(playerMovementController);
+            objectResolver.Inject(playerWeaponController);
+            objectResolver.Inject(playerStateController);
             playerMovementController.OnStart(this);
             playerAnimationController.OnStart(this);
             playerStateController.OnStart(this);
             playerWeaponController.OnStart(this);
+        }
+
+        public void OnLevelStart()
+        {
+            HealthController.InitialSet();
+            playerStateController.OnLevelStart();
+            playerAnimationController.OnLevelStart();
+            playerMovementController.OnLevelStart();
+            playerTargetController.OnLevelStart();
         }
         
         protected void Update()

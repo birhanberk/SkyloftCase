@@ -31,6 +31,11 @@ namespace Character.Player.Controllers
             _playerCharacter = playerCharacter;
         }
 
+        public void OnLevelStart()
+        {
+            characterController.enabled = true;
+        }
+
         public void OnUpdate()
         {
             MoveCharacter();
@@ -47,8 +52,7 @@ namespace Character.Player.Controllers
                 var target = _playerCharacter.TargetController.GetClosestTarget();
                 if (target != null)
                 {
-                    desiredForward =
-                        target.TargetTransform.position - _playerCharacter.transform.position;
+                    desiredForward = target.TargetTransform.position - _playerCharacter.transform.position;
                 }
             }
             else if (_moveDirection.sqrMagnitude > walkThreshold)
@@ -80,10 +84,10 @@ namespace Character.Player.Controllers
             return new Vector2(localDir.x, localDir.z);
         }
         
-        public void StopImmediately()
+        public void StopMovement()
         {
             _moveDirection = Vector3.zero;
-            if (characterController && characterController.enabled)
+            if (characterController && characterController.gameObject.activeInHierarchy &&characterController.enabled)
             {
                 characterController.Move(Vector3.zero);
             }
@@ -102,7 +106,6 @@ namespace Character.Player.Controllers
         private void SmoothRotate(Vector3 desiredForward)
         {
             var targetRotation = Quaternion.LookRotation(desiredForward, Vector3.up);
-
             _playerCharacter.transform.rotation = Quaternion.Slerp(_playerCharacter.transform.rotation, targetRotation, rotationSmoothSpeed * Time.deltaTime);
         }
     }

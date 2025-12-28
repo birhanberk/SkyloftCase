@@ -1,6 +1,7 @@
 using GameState;
 using GameState.States;
 using Managers;
+using Pool;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -12,6 +13,8 @@ namespace Scope
         [SerializeField] private GameManager gameManager;
         [SerializeField] private UIManager uiManager;
         [SerializeField] private LevelManager levelManager;
+        [SerializeField] private PoolManager poolManager;
+        [SerializeField] private PersistentDataManager persistentDataManager;
         
         protected override void Configure(IContainerBuilder builder)
         {
@@ -20,6 +23,8 @@ namespace Scope
             builder.RegisterComponent(gameManager);
             builder.RegisterComponent(uiManager);
             builder.RegisterComponent(levelManager);
+            builder.RegisterComponent(poolManager);
+            builder.RegisterComponent(persistentDataManager);
             
             // States
             builder.Register<StartState>(Lifetime.Transient);

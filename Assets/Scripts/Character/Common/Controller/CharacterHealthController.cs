@@ -8,15 +8,23 @@ namespace Character.Common.Controller
         private BaseCharacter _character;
         private float _maxHealth;
         private float _currentHealth;
+
+        public bool IsAlive => _currentHealth > 0;
         
         public Action<float, float> OnHealthChanged;
         public Action<BaseCharacter> OnDeadAction;
-        public Action<BaseCharacter> OnDeadCompleteAction;
+        public Action OnDeadCompleteAction;
 
         public void OnStart(BaseCharacter character)
         {
             _character = character;
-            SetMaxHealth(character.CharacterData.Health);
+            InitialSet();
+        }
+
+        public void InitialSet()
+        {
+            SetMaxHealth(_character.CharacterData.Health);
+            SetHealth(_maxHealth);
         }
         
         public void TakeDamage(float damage)
@@ -24,9 +32,9 @@ namespace Character.Common.Controller
             SetHealth(_currentHealth - damage);
         }
         
-        private void OnDeadComplete()
+        public void OnDeadCompleted()
         {
-            OnDeadCompleteAction?.Invoke(_character);
+            OnDeadCompleteAction?.Invoke();
         }
         
         private void OnDead()

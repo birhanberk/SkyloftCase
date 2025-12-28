@@ -1,5 +1,6 @@
 using GameState;
 using GameState.States;
+using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,17 +15,22 @@ namespace UI.Panels
         
         [Header("Buttons")]
         [SerializeField] private Button nextButton;
+        [SerializeField] private Button returnButton;
 
         [Inject] private GameStateMachine _gameStateMachine;
-        
+        [Inject] private LevelManager _levelManager;
+
         private void OnEnable()
         {
             nextButton.onClick.AddListener(NextButtonPerformed);
+            returnButton.onClick.AddListener(ReturnButtonPerformed);
+            UpdateKillCountText(_levelManager.CurrentLevel.KillCount);
         }
 
         private void OnDisable()
         {
             nextButton.onClick.RemoveListener(NextButtonPerformed);
+            returnButton.onClick.RemoveListener(ReturnButtonPerformed);
         }
 
         private void NextButtonPerformed()
@@ -32,10 +38,9 @@ namespace UI.Panels
             _gameStateMachine.ChangeState<LevelTransitionState>();
         }
 
-        public void Show(int killCount)
+        private void ReturnButtonPerformed()
         {
-            Show();
-            UpdateKillCountText(killCount);
+            _gameStateMachine.ChangeState<StartState>();
         }
 
         private void UpdateKillCountText(int killCount)

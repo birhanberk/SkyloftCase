@@ -21,6 +21,11 @@ namespace UI.Joystick
             root.SetActive(false);
         }
 
+        public void OnReset()
+        {
+            OnPointerUp(null);
+        }
+
         public void OnPointerDown(PointerEventData eventData)
         {
             root.SetActive(true);

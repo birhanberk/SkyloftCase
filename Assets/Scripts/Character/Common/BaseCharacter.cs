@@ -1,5 +1,6 @@
 using Character.Common.Controller;
 using UnityEngine;
+using VContainer;
 
 namespace Character.Common
 {
@@ -10,8 +11,9 @@ namespace Character.Common
 
         public BaseCharacterData CharacterData => baseCharacterData;
         public CharacterHealthController HealthController => characterHealthController;
-        
-        protected virtual void Start()
+
+        [Inject]
+        private void Construct()
         {
             characterHealthController.OnStart(this);
         }

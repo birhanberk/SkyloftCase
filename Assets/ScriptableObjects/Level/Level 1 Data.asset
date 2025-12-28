@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1636ce26ba7b5524a8d96164aff6c33b, type: 3}
   m_Name: Level 1 Data
   m_EditorClassIdentifier: 
-  levelPrefab: {fileID: 3414521877024770667, guid: b7fa8bfb9a846a74f83d6e263628d48a, type: 3}
-  enemyCount: 0
-  enemySpawnRate: 0
+  levelTime: 180
+  levelSpawnData:
+  - enemyData: {fileID: 11400000, guid: 672cc8e5f98f8e744a4291537338dbf6, type: 2}
+    spawnRatio: 80
+  - enemyData: {fileID: 11400000, guid: e3e4ff5460fde744e894a9a2d3d25696, type: 2}
+    spawnRatio: 20
+  maxActiveEnemyCount: 15
+  despawnDistance: 0.4

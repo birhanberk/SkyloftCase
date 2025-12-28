@@ -1,38 +1,50 @@
 using System.Collections.Generic;
-using Level;
+using Levels;
 using UnityEngine;
+using VContainer;
 
 namespace Managers
 {
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private List<LevelData> levels;
+        [SerializeField] private List<Level> levelPrefabs;
         [SerializeField] private Transform levelRoot;
+        
+        [Inject] private IObjectResolver _objectResolver;
 
-        private int _currentLevelIndex = -1;
-        private GameObject _currentLevelInstance;
+        private int _currentLevelIndex;
+        private Level _currentLevelInstance;
 
-        public void LoadNextLevel()
+        public Level CurrentLevel => _currentLevelInstance;
+        public int CurrentLevelIndex => _currentLevelIndex;
+
+        public void OnLevelSuccessful()
         {
             _currentLevelIndex++;
 
-            if (_currentLevelIndex >= levels.Count)
+            if (_currentLevelIndex >= levelPrefabs.Count)
                 _currentLevelIndex = 0;
+        }
 
-            LoadLevel(_currentLevelIndex);
+        public void DestroyLevel()
+        {
+            if (_currentLevelInstance)
+            {
+                Destroy(_currentLevelInstance.gameObject);
+            }
         }
 
         public bool HasNextLevel()
         {
-            return _currentLevelIndex + 1 < levels.Count;
+            return _currentLevelIndex + 1 < levelPrefabs.Count;
         }
 
-        private void LoadLevel(int index)
+        public void LoadLevel()
         {
-            if (_currentLevelInstance)
-                Destroy(_currentLevelInstance);
+            DestroyLevel();
 
-            _currentLevelInstance = Instantiate(levels[index].LevelPrefab, levelRoot);
+            _currentLevelInstance = Instantiate(levelPrefabs[_currentLevelIndex], levelRoot);
+            _objectResolver.Inject(_currentLevelInstance);
         }
     }
 }
